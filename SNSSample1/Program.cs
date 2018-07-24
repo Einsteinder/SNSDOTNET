@@ -64,7 +64,26 @@ namespace SNSSample1
 
                 // Publish message
                 Console.WriteLine();
-                pushMessage("testMessage", topicArn);
+                pushMessage(@"[ '967813618981',
+                                'BPNYDCFEE-6592',
+                                '2/2/2018 20:59:00',
+                                'Ops Hold',
+                                '2018-02-02T20:59:38',
+                                'Hold',
+                                'Hold',
+                                '',
+                                '',
+                                '' ]", topicArn);
+                pushMessage(@"[ '967813618981',
+                                'BPNYDCFEE-6592',
+                                '2/2/2018 20:59:00',
+                                'Ops Hold',
+                                '2018-02-02T20:59:38',
+                                'Hold',
+                                'Hold',
+                                '',
+                                '',
+                                '' ]", topicArn);
                 // Verify http endpoint receieved
                 Console.WriteLine();
                 Console.WriteLine("Please check your http endpoint and press enter when you receive the message...");
