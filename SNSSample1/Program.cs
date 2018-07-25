@@ -14,7 +14,7 @@
 *******************************************************************************/
 
 using System;
-
+using System.Threading.Tasks;
 using Amazon;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
@@ -23,7 +23,7 @@ namespace SNSSample1
 {
     class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             var sns = new AmazonSimpleNotificationServiceClient();
             string httpAddress = "http://34.217.101.161:3018/redisServer";
@@ -57,14 +57,14 @@ namespace SNSSample1
                     Endpoint = httpAddress
                 });
 
-                // When using email, recipient must confirm subscription
+                // When using http, recipient must confirm subscription
                 Console.WriteLine();
                 Console.WriteLine("Please check your http endpoint and press enter when you are subscribed...");
                 Console.ReadLine();
 
                 // Publish message
                 Console.WriteLine();
-                pushMessage(@"[ '967813618981',
+                _ = DespatchAsync(@"[ '967813618981',
                                 'BPNYDCFEE-6592',
                                 '2/2/2018 20:59:00',
                                 'Ops Hold',
@@ -74,7 +74,7 @@ namespace SNSSample1
                                 '',
                                 '',
                                 '' ]", topicArn);
-                pushMessage(@"[ '967813618981',
+                _ =DespatchAsync(@"[ '967813618981',
                                 'BPNYDCFEE-6592',
                                 '2/2/2018 20:59:00',
                                 'Ops Hold',
@@ -110,6 +110,21 @@ namespace SNSSample1
             Console.WriteLine("Press enter to exit...");
             Console.ReadLine();
         }
+
+        public static async Task<PublishResponse> DespatchAsync(string message,string topicArn)
+        {
+            Console.WriteLine("Publishing message to topic...");
+            var sns = new AmazonSimpleNotificationServiceClient();
+            if (string.IsNullOrEmpty(topicArn) || string.IsNullOrEmpty(message))
+            {
+                return new PublishResponse(); //do not proceed
+            }
+
+            var request = new PublishRequest(topicArn, message);
+            var response = await sns.PublishAsync(request);
+            return response;
+        }
+
 
         public static void pushMessage(string message, string topicArn)
         {
